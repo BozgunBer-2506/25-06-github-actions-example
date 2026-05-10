@@ -1,29 +1,27 @@
-name: Deploy-Website-Worklfow
+name: Deploy-Website-Workflow
 
 on: push
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            
-            - name: checkout
-              uses: actions/checkout@v6
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
 
+      - name: ssh setup
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/mein_schlüssel
+          chmod 400 ~/.ssh/mein_schlüssel
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-            - name: ssh setup
-              run: |
-                mkdir -p ~/.ssh
-                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/mein_schlüssel
-                chmod 400 ~/.ssh/mein_schlüssel
-                ssh-keyscan -H ${{secrets.EC2_IP}} >> ~/.ssh/known_hosts
+      - name: install nginx
+        run: |
+          ssh -i ~/.ssh/mein_schlüssel ubuntu@${{ secrets.EC2_HOST }} "sudo apt update"
+          ssh -i ~/.ssh/mein_schlüssel ubuntu@${{ secrets.EC2_HOST }} "sudo apt install nginx -y"
 
-            - name: install nginx
-              run: |
-                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo apt update"
-                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo apt install nginx -y"
-
-            - name: deploy website
-              run: |
-                scp -i ~/.ssh/mein_schlüssel index.html ubuntu@${{secrets.EC2_IP}}:/home/ubuntu/index.html
-                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+      - name: deploy website
+        run: |
+          scp -i ~/.ssh/mein_schlüssel index.html ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/index.html
+          ssh -i ~/.ssh/mein_schlüssel ubuntu@${{ secrets.EC2_HOST }} "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
