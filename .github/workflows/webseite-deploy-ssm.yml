@@ -1,0 +1,33 @@
+name: Deploy via SSM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Send Deployment Command via SSM
+        run: |
+          aws ssm send-command \
+            --instance-ids "${{ secrets.INSTANCE_ID }}" \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=[
+              "sudo apt update -y",
+              "sudo apt install -y nginx",
+              "sudo systemctl start nginx",
+              "sudo systemctl enable nginx",
+              "echo \"Hello Baris! SSM Deployment Successful!\" | sudo tee /var/www/html/index.html"
+            ]'
