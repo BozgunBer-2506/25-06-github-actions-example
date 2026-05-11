@@ -1,7 +1,6 @@
----
 name: Deploy via SSM
 
-"on":
+on:
   push:
     branches:
       - main
