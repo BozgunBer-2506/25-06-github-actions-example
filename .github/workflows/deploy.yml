@@ -1,0 +1,39 @@
+name: Deploy Docker
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: ssh setup
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/mein_schluessel
+          chmod 400 ~/.ssh/mein_schluessel
+          ssh-keyscan -H ${{ secrets.EC2_IP }} >> ~/.ssh/known_hosts
+
+      - name: install docker
+        run: |
+          ssh -i ~/.ssh/mein_schluessel ubuntu@${{ secrets.EC2_IP }} \
+            "sudo apt update && sudo apt install -y docker.io"
+
+      - name: copy frontend
+        run: |
+          scp -i ~/.ssh/mein_schluessel -r frontend ubuntu@${{ secrets.EC2_IP }}:/home/ubuntu/
+
+      - name: deploy container
+        run: |
+          ssh -i ~/.ssh/mein_schluessel ubuntu@${{ secrets.EC2_IP }} "
+            sudo docker build -t frontend-image /home/ubuntu/frontend
+            sudo docker stop mein-frontend-container || true
+            sudo docker rm mein-frontend-container || true
+            sudo docker run -d --name mein-frontend-container -p 80:80 frontend-image
+          "
