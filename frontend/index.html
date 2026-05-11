@@ -8,5 +8,18 @@
     <h1>Mein erstes automatisiertes Docker Deployment</h1>
     <p>Diese Webseite wurde mit GitHub Actions auf eine EC2-Maschine deployed.</p>
     <p>Team: Baris</p>
+
+    <h2>Deployment Schritte</h2>
+    <ol>
+        <li>index.html und Dockerfile im Ordner <code>frontend/</code> erstellt</li>
+        <li>Dockerfile: nginx:alpine als Base Image, index.html wird in den nginx-Webordner kopiert</li>
+        <li>GitHub Actions Workflow erstellt: wird bei jedem Push auf main ausgelöst</li>
+        <li>SSH-Verbindung zur EC2-Instanz wird aufgebaut</li>
+        <li>Docker wird auf EC2 installiert (falls nicht vorhanden)</li>
+        <li>Der Ordner <code>frontend/</code> wird per SCP auf EC2 kopiert</li>
+        <li>Docker Image wird auf EC2 gebaut: <code>docker build -t frontend-image</code></li>
+        <li>Alter Container wird gestoppt und gelöscht</li>
+        <li>Neuer Container wird gestartet: Port 80 wird freigegeben</li>
+    </ol>
 </body>
 </html>
