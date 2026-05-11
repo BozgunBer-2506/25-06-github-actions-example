@@ -25,7 +25,8 @@ jobs:
             --instance-ids "${{ secrets.INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
-              "which nginx || (sudo apt update -y && sudo apt install -y nginx)",
+              "sudo apt update -y",
+              "sudo apt install -y nginx",
               "sudo systemctl start nginx",
               "sudo systemctl enable nginx",
               "echo \"Deployment Successful via AWS SSM\" | sudo tee /var/www/html/index.html"
