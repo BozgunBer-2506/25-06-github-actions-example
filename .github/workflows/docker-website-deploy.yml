@@ -1,0 +1,35 @@
+name: Docker website Deploy Workflow
+
+on: push
+
+jobs:
+    deploy:
+
+        runs-on: ubuntu-latest
+        steps:
+            
+            - name: checkout
+              uses: actions/checkout@v6
+
+
+            - name: ssh setup
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/mein_schlüssel
+                chmod 400 ~/.ssh/mein_schlüssel
+                ssh-keyscan -H ${{secrets.EC2_IP}} >> ~/.ssh/known_hosts
+
+            - name: install docker
+              run: |
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo apt update"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo apt install docker.io -y"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "sudo usermod -aG docker ubuntu"
+
+            - name: start frontend container on ec2
+              run: |
+                scp -i ~/.ssh/mein_schlüssel -r frontend ubuntu@${{secrets.EC2_IP}}:/home/ubuntu/
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "docker stop suheibs-frontend-container || true"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "docker rm suheibs-frontend-container || true"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "docker rmi suheibs-frontend || true"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "docker build --no-cache -t suheibs-frontend  /home/ubuntu/frontend"
+                ssh -i ~/.ssh/mein_schlüssel ubuntu@${{secrets.EC2_IP}} "docker run -d -p 80:80 --name suheibs-frontend-container suheibs-frontend"
