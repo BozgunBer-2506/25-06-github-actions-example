@@ -28,13 +28,13 @@ Deploys to EC2 using AWS Systems Manager (SSM) - no SSH or open ports required.
 
 **Commands executed on EC2:**
 ```bash
-which nginx || (sudo apt update -y && sudo apt install -y nginx)
+sudo apt update -y && sudo apt install -y nginx
 sudo systemctl start nginx
 sudo systemctl enable nginx
 echo "Deployment Successful via AWS SSM" | sudo tee /var/www/html/index.html
 ```
 
-> `which nginx || (...)` - installs nginx only if not already present, skipping the apt update on subsequent runs.
+> `apt install -y nginx` is idempotent - safe to run on every deployment regardless of whether nginx is already installed.
 
 ---
 
