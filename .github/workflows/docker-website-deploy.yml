@@ -1,6 +1,6 @@
 name: Docker website Deploy Workflow
 
-on: push
+on: workflow_dispatch
 
 jobs:
     deploy:

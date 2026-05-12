@@ -1,0 +1,40 @@
+name: Test and deployment vom Taschenrechner
+
+on: push
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            
+            - name: checkout
+              uses: actions/checkout@v6
+
+            - name: install node
+              uses: actions/setup-node@v6
+              with:
+                  node-version: "20"
+            
+            - name: install dependencies & test
+              run: |
+                  cd testing-example
+                  npm install
+                  npm test
+    
+    deploy:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - name: checkout
+              uses: actions/checkout@v6
+
+            - name: ssh setup
+              run: |
+                mkdir -p ~/.ssh
+                echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/mein_schlüssel
+                chmod 400 ~/.ssh/mein_schlüssel
+                ssh-keyscan -H ${{secrets.EC2_IP}} >> ~/.ssh/known_hosts
+
+            - name: copy math.js
+              run: |
+                scp -i ~/.ssh/mein_schlüssel testing-example/math.js ubuntu@${{secrets.EC2_IP}}:/home/ubuntu/math.js
