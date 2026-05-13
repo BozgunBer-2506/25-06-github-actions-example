@@ -1,4 +1,4 @@
-name: staging workflow
+name: produktions workflow
 
 on: 
     push:
