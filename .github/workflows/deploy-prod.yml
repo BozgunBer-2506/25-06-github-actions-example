@@ -35,3 +35,4 @@ jobs:
                 for ip in ${{secrets.EC2_IPS_PROD}}; do
                 scp -i ~/.ssh/mein_schlüssel frontend/index.html ubuntu@$ip:/home/ubuntu/index.html
                 ssh -i ~/.ssh/mein_schlüssel ubuntu@$ip "sudo cp /home/ubuntu/index.html /var/www/html/index.html"
+                done
