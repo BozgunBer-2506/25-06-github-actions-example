@@ -1,25 +1,156 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Mein Docker Deployment</title>
-</head>
-<body>
-    <h1>Mein erstes automatisiertes Docker Deployment</h1>
-    <p>Diese Webseite wurde mit GitHub Actions auf eine EC2-Maschine deployed.</p>
-    <p>Team: Baris</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alles über Zwiebeln</title>
 
-    <h2>Deployment Schritte</h2>
-    <ol>
-        <li>index.html und Dockerfile im Ordner <code>frontend/</code> erstellt</li>
-        <li>Dockerfile: nginx:alpine als Base Image, index.html wird in den nginx-Webordner kopiert</li>
-        <li>GitHub Actions Workflow erstellt: wird bei jedem Push auf main ausgelöst</li>
-        <li>SSH-Verbindung zur EC2-Instanz wird aufgebaut</li>
-        <li>Docker wird auf EC2 installiert (falls nicht vorhanden)</li>
-        <li>Der Ordner <code>frontend/</code> wird per SCP auf EC2 kopiert</li>
-        <li>Docker Image wird auf EC2 gebaut: <code>docker build -t frontend-image</code></li>
-        <li>Alter Container wird gestoppt und gelöscht</li>
-        <li>Neuer Container wird gestartet: Port 80 wird freigegeben</li>
-    </ol>
-</body>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #fff7d6, #f3d27a);
+        color: #2f2504;
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: #7a4f01;
+        color: white;
+        text-align: center;
+        padding: 50px 20px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 3rem;
+      }
+
+      header p {
+        margin-top: 10px;
+        font-size: 1.2rem;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      section {
+        background-color: white;
+        margin-bottom: 25px;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      h2 {
+        color: #7a4f01;
+        margin-top: 0;
+        border-left: 6px solid #d89b22;
+        padding-left: 12px;
+      }
+
+      ul,
+      ol {
+        padding-left: 25px;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      .highlight {
+        background-color: #fff1b8;
+        border: 2px solid #d89b22;
+      }
+
+      .recipe {
+        background-color: #fdf6e3;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #7a4f01;
+        color: white;
+        margin-top: 40px;
+      }
+
+      @media (max-width: 600px) {
+        header h1 {
+          font-size: 2.2rem;
+        }
+
+        section {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Die Zwiebel</h1>
+      <p>Klein, würzig und in fast jeder Küche zu Hause</p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Was ist eine Zwiebel?</h2>
+        <p>
+          Die Zwiebel ist ein sehr bekanntes Gemüse. Sie wird in vielen
+          Gerichten verwendet und gibt dem Essen einen kräftigen Geschmack.
+        </p>
+      </section>
+
+      <section>
+        <h2>Warum sind Zwiebeln beliebt?</h2>
+        <ul>
+          <li>Sie sind günstig.</li>
+          <li>Sie passen zu vielen Gerichten.</li>
+          <li>Sie können roh, gebraten oder gekocht gegessen werden.</li>
+          <li>Sie geben Suppen, Soßen und Salaten mehr Geschmack.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Verschiedene Arten von Zwiebeln</h2>
+        <p>Es gibt verschiedene Zwiebelsorten:</p>
+        <ol>
+          <li>Gelbe Zwiebeln</li>
+          <li>Rote Zwiebeln</li>
+          <li>Weiße Zwiebeln</li>
+          <li>Frühlingszwiebeln</li>
+        </ol>
+      </section>
+
+      <section class="highlight">
+        <h2>Interessanter Fakt</h2>
+        <p>
+          Beim Schneiden von Zwiebeln tränen oft die Augen. Das passiert, weil
+          beim Schneiden bestimmte Stoffe freigesetzt werden, die die Augen
+          reizen.
+        </p>
+      </section>
+
+      <section class="recipe">
+        <h2>Einfaches Beispielgericht</h2>
+        <p>
+          Ein einfaches Gericht mit Zwiebeln sind gebratene Zwiebeln. Man
+          schneidet die Zwiebeln in Ringe und brät sie mit etwas Öl in einer
+          Pfanne an.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Erstellt mit HTML und CSS</p>
+    </footer>
+  </body>
 </html>
